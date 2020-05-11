@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS Reference VS Copy</title>
+</head>
+<body>
+
+  <script>
+    // start with strings, numbers and booleans
+    let age = 100;
+    let age2 = age;
+    console.log(age, age2);
+    age = 200;
+    console.log(age, age2);
+
+    let name = "aron";
+    let name2 = name;
+    console.log(name, name2);
+    name = "viki";
+    console.log(name, name2);
+
+    // Let's say we have an array
+    const players = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
+    console.log("players: ", players);
+
+    // and we want to make a copy of it.
+    // const team = players;
+
+    // You might think we can just do something like this:
+    // team[3] = "aron";
+    // console.log("players and team: ", players, team);
+
+    // however what happens when we update that array?
+
+    // now here is the problem!
+
+    // oh no - we have edited the original array too!
+
+    // Why? It's because that is an array reference, not an array copy. They both point to the same array!
+
+    // So, how do we fix this? We take a copy instead!
+    const team2 = players.slice(); // használjuk a splice() metódust ha nem akarjuk hogy a fo tömb is változzon
+    
+    // one way
+
+    // or create a new array and concat the old one in
+    const team3 = [].concat(players);
+
+    // or use the new ES6 Spread
+    const team4 = [...players];
+    team4[3] = "yehaa";
+    console.log("team4 and players: ", team4, players);
+
+    const team5 = Array.from(players);
+
+    // now when we update it, the original one isn't changed
+
+    // The same thing goes for objects, let's say we have a person object
+
+    // with Objects
+    const person = {
+      name: 'kovacs aron',
+      age: 80
+    };
+    console.log("person: ", person);
+
+    // and think we make a copy:
+    // const captain = person;
+    // captain.number = 99;
+    // console.log("captain and person: ", captain, person);
+    // egy referenciát készítettünk az eredeti tömbről
+
+    // how do we take a copy instead?
+    const capt2 = Object.assign({}, person, { number: 99, age: 20 });
+    console.log("capt2 and person: ", capt2, person);
+    // így felülírható a capt2 objektum, de az eredetiti békénhagytuk
+
+    // We will hopefully soon see the object ...spread
+    const capt3 = {...person};
+    console.log("capt3: ", capt3);
+
+    // Things to note - this is only 1 level deep - both for Arrays and Objects. lodash has a cloneDeep method, but you should think twice before using it.
+    const aron = {
+      name: "aron",
+      age: 32,
+      social: {
+        facebook: "kovacsaronlaszlo",
+      }
+    };
+
+    console.clear();
+    console.log("aron: ", aron);
+
+    const dev = Object.assign({}, aron); 
+    // FIGYELEM! az object assign csak egy szint mélyen klónoz
+    // így ha a socal belső objektumot akarom megváltoztatni akkor a z válltozik az "aron" objektumban is
+    dev.name = "aron laszlo";
+
+    console.log("dev: ", dev);
+
+    const dev2 = JSON.parse(JSON.stringify(aron));
+    dev2.social.facebook = "kovacsaron";
+    console.log("dev2: ", dev2, "aron: ", aron);
+    // mivel a JSON.stringify stringgé alakítja az objektumot
+    // a JSON.parse pedig vissza alaakítja objektummá, így már változtatható több szinten is
+
+
+  </script>
+
+</body>
+</html>
